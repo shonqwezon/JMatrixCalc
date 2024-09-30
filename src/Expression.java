@@ -84,7 +84,7 @@ public class Expression {
 
 
     /**
-     * @param operation
+     * @param operation Operation
      * @param token1 First argument
      * @param token2 Second argument
      * @return Updated token
