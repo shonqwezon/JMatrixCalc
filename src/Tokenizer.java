@@ -21,18 +21,13 @@ public class Tokenizer {
         return createToken(currentState, Character.toString(c));
     }
 
-    private static Token createToken(Token.State currentState, String s)  {
-        switch (currentState) {
-            case VAR -> {
-                return new TokenMatrix(currentState, s);
-            }
-            case KF -> {
-                return new TokenComplex(currentState, s);
-            }
-            default -> {
-                return new Token(currentState, s);
-            }
-        }
+    private static Token createToken(Token.State currentState, String s) {
+        return switch (currentState) {
+            case VAR -> new TokenMatrix(currentState, s);
+            case KF -> new TokenComplex(currentState, s);
+            case OPERATOR -> new Token(currentState, s, operators.get(s.charAt(0)));
+            default -> new Token(currentState, s);
+        };
     }
 
     /**

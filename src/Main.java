@@ -11,7 +11,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         String input;
         Expression expression = new Expression();
-        // Run while input != exit
+        // Run, while input != exit
         while (true) {
             System.out.println(INPUT_EXP);
             input = sc.nextLine();
@@ -19,7 +19,7 @@ public class Main {
                 break;
             try {
                 // String tokenization
-                ArrayList<Token> tokens = new Token.Tokenizer().run(input);
+                ArrayList<Token> tokens = Tokenizer.run(input);
                 for (Token token : tokens) {
                     System.out.printf("State: %s\t\t\tName: %s\t\tPriority: %d\n", token.getState(), token.getName(), token.getPriority());
                 }
