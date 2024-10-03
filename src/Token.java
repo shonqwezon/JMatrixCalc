@@ -15,21 +15,6 @@ public class Token {
     protected String name;
     final protected int priority;
 
-    static public Map<String, Double> varValues = new HashMap<>();
-    static public double NULL_VALUE = -1_000_000_000;
-
-    static public double getVarIfDefined(String name) {
-        return varValues.getOrDefault(name, NULL_VALUE);
-    }
-
-    static public void defineVar(String name, double value) {
-        varValues.put(name, value);
-    }
-
-    static public void clearVars() {
-        varValues.clear();
-    }
-
     public Token(State state, String name, int priority) {
         this.state = state;
         this.name = name;

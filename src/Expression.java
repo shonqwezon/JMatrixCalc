@@ -9,8 +9,6 @@ import java.util.concurrent.ExecutionException;
  * Class for calculating expression of tokens
  */
 public class Expression {
-    private final Scanner sc = new Scanner(System.in);
-    private final String INPUT_DEF = "\nВведите значение для матрицы '%s':\n";
     private ArrayList<Token> tokens;
 
     /**
@@ -19,17 +17,9 @@ public class Expression {
     public void loadTokens(ArrayList<Token> tokens) throws Exception {
         // Getting matrix values for VAR
         for (Token token : tokens) {
+            if(token.getState() != Token.State.VAR && token.getState() != Token.State.KF)
+                continue;
             token.initValue();
-//            if (token.getState() != Token.State.VAR) continue;
-            // Init token from hash table
-//            if (Token.getVarIfDefined(token.getName()) != Token.NULL_VALUE) {
-//                token.setValue(Token.getVarIfDefined(token.getName()));
-//                continue;
-//            }
-//            System.out.printf(INPUT_DEF, token.getName());
-//            token.setValue(sc.nextInt());
-//            Token.defineVar(token.getName(), token.getValue());
-//            sc.nextLine();
         }
         this.tokens = tokens;
     }

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    static final String HELLO = "Кальулятор матриц!\nДоступные операции: ( ), +, -, *, /, ^, | |, ^T\n";
+    static final String HELLO = "Кальулятор матриц!\nДоступные операции: ( ), +, -, *, /, | |, ^T\n";
     static final String INPUT_EXP = "Введите выражение:";
     static final String RESULT = "Результат: ";
 
@@ -29,7 +29,7 @@ public class Main {
                 System.out.println("Ошибка: " + ex.getMessage());
             }
             finally {
-                Token.clearVars();
+                TokenMatrix.clearValues();
             }
         }
     }
