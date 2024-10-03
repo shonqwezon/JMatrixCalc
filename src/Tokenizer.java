@@ -93,7 +93,7 @@ public class Tokenizer {
                     // Add special operator for matrix
                     if (currentState == Token.State.VAR && s == 'T') {
                         updateLastTokenName(s);
-                        currentState = Token.State.OPERATOR;
+                        currentState = Token.State.NONE;
                     } else
                         tokens.add(createToken(currentState, s));
                 }
