@@ -1,3 +1,6 @@
+import exceptions.ExpressionException;
+import exceptions.TokenException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +50,7 @@ public class Tokenizer {
     /**
      * @param input String to tokenize
      * @return ArrayList of tokens
-     * @throws Exception An error in expression
+     * @throws TokenException An error in expression
      */
     public static ArrayList<Token> run(final String input) throws Exception {
         tokens = new ArrayList<>();
@@ -121,7 +124,7 @@ public class Tokenizer {
         else if (Character.isLetter(s)) return Token.State.VAR;
         else if (operators.containsKey(s)) return Token.State.OPERATOR;
         else if (s == '(' || s == ')' || s == '|') return Token.State.BRACKET;
-        else throw new Exception(String.format("Неизвестный символ (%d)", index));
+        else throw new TokenException(String.format("Неизвестный символ (%d)", index));
     }
 }
 
