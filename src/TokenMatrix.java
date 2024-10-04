@@ -25,7 +25,13 @@ public class TokenMatrix extends Token {
 
     @Override
     public TokenMatrix clone() {
-        return (TokenMatrix) super.clone();
+        TokenMatrix tokenMatrix = (TokenMatrix) super.clone();
+        tokenMatrix.matrix = new TokenComplex[rows][cols];
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                tokenMatrix.matrix[i][j] = matrix[i][j].clone();
+
+        return tokenMatrix;
     }
 
     private TokenComplex[][] matrix;
@@ -94,10 +100,10 @@ public class TokenMatrix extends Token {
         return getDeterminant(matrix);
     }
 
-    private TokenComplex getDeterminant(TokenComplex[][] matrix) {
+    private static TokenComplex getDeterminant(final TokenComplex[][] matrix) {
         final int size = matrix.length;
         if (size == 1)
-            return matrix[0][0];
+            return matrix[0][0].clone();
         TokenComplex complex = new TokenComplex();
         for (int col = 0; col < size; col++) {
             TokenComplex sign = new TokenComplex(Math.pow(-1, col), 0);
@@ -109,7 +115,7 @@ public class TokenMatrix extends Token {
         return complex;
     }
 
-    private TokenComplex[][] minor(TokenComplex[][] matrix, int row, int col) {
+    private static TokenComplex[][] minor(final TokenComplex[][] matrix, int row, int col) {
         final int size = matrix.length;
         TokenComplex[][] minorMatrix = new TokenComplex[size - 1][size - 1];
         for (int j = 0, mj = 0; j < size; j++) {
@@ -190,6 +196,40 @@ public class TokenMatrix extends Token {
 
     @Override
     public void div(final Token token) {
+        if (token.getState() == State.KF) {
+            TokenComplex uno = new TokenComplex(1, 0);
+            uno.div(token);
+            token.multi(uno);
+            return;
+        }
+        if (token.getState() != state)
+            throw new TokenException(String.format("Операция %s / %s не поддерживается", state, token.getState()));
 
+        TokenMatrix reverseMatrix = getReverse((TokenMatrix) token);
+        multi(reverseMatrix);
+    }
+
+    private static TokenMatrix getReverse(TokenMatrix tokenMatrix) {
+        TokenComplex det;
+        try {
+            det = tokenMatrix.det();
+        } catch (TokenException ex) {
+            throw new TokenException("Невозможно делить неквадратные матрицы");
+        }
+        if(det.isNull())
+            throw new TokenException("Невозможно делить вырожденые матрицы");
+
+        TokenMatrix reverseMatrix = tokenMatrix.clone();
+        for (int i = 0; i < reverseMatrix.rows; i++) {
+            for (int j = 0; j < reverseMatrix.cols; j++) {
+                TokenComplex sign = new TokenComplex(Math.pow(-1, i+j), 0);
+                TokenComplex addition = getDeterminant(minor(tokenMatrix.matrix, i, j));
+                addition.multi(sign);
+                addition.div(det);
+                reverseMatrix.matrix[i][j] = addition;
+            }
+        }
+        reverseMatrix.transpose();
+        return reverseMatrix;
     }
 }

@@ -117,9 +117,13 @@ public class TokenComplex extends Token {
         TokenComplex t_conj = ((TokenComplex) token).clone();
         t_conj.imaginary *= -1;
         multi(t_conj);
-        TokenComplex denom = this.clone();
+        TokenComplex denom = (TokenComplex) token.clone();
         denom.multi(t_conj);
         real /= denom.real;
         imaginary /= denom.real;
+    }
+
+    public boolean isNull() {
+        return real == 0 && imaginary == 0;
     }
 }

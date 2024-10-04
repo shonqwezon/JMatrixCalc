@@ -41,6 +41,8 @@ public class Expression {
                         Token oper = opersStack.pop();
                         while (!oper.getName().equals("(")) {
                             Token token2 = argsStack.pop();
+                            if(argsStack.isEmpty())
+                                throw new ExpressionException("Некорректное выражение");
                             Token token1 = argsStack.pop();
                             argsStack.push(applyOperation(oper, token1, token2));
                             oper = opersStack.pop();
@@ -52,6 +54,8 @@ public class Expression {
                             Token oper = opersStack.pop();
                             while (!oper.getName().equals("|")) {
                                 Token token2 = argsStack.pop();
+                                if(argsStack.isEmpty())
+                                    throw new ExpressionException("Некорректное выражение");
                                 Token token1 = argsStack.pop();
                                 argsStack.push(applyOperation(oper, token1, token2));
                                 oper = opersStack.pop();
@@ -71,6 +75,8 @@ public class Expression {
                     if (!opersStack.isEmpty() && opersStack.peek().getState() == Token.State.OPERATOR
                             && opersStack.peek().getPriority() >= token.getPriority()) {
                         Token token2 = argsStack.pop();
+                        if(argsStack.isEmpty())
+                            throw new ExpressionException("Некорректное выражение");
                         Token token1 = argsStack.pop();
                         argsStack.push(applyOperation(opersStack.pop(), token1, token2));
                     }
@@ -81,6 +87,8 @@ public class Expression {
 
         while (!opersStack.isEmpty()) {
             Token token2 = argsStack.pop();
+            if(argsStack.isEmpty())
+                throw new ExpressionException("Некорректное выражение");
             Token token1 = argsStack.pop();
             argsStack.push(applyOperation(opersStack.pop(), token1, token2));
         }
