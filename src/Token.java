@@ -42,26 +42,26 @@ public class Token {
     }
 
     public String getStringValue() {
-        throw new MethodNotSupportedException();
+        throw new MethodNotSupportedException("getStringValue()");
     }
 
     public void initValue() throws Exception {
-        throw new MethodNotSupportedException();
+        throw new MethodNotSupportedException("initValue()");
     }
 
     public void add(final Token arg2) {
-        throw new MethodNotSupportedException();
+        throw new MethodNotSupportedException("add()");
     }
 
     public void sub(final Token arg2) {
-        throw new MethodNotSupportedException();
+        throw new MethodNotSupportedException("sub()");
     }
 
     public void multi(final Token arg2) {
-        throw new MethodNotSupportedException();
+        throw new MethodNotSupportedException("multi()");
     }
 
     public void div(final Token arg2) throws CloneNotSupportedException {
-        throw new MethodNotSupportedException();
+        throw new MethodNotSupportedException("div()");
     }
 }
