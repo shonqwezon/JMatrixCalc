@@ -24,9 +24,21 @@ public class TokenMatrix extends Token {
         super(state, name);
     }
 
+    @Override
+    public TokenMatrix clone() {
+        return (TokenMatrix) super.clone();
+    }
+
     private TokenComplex[][] matrix;
     private int rows;
     private int cols;
+
+    String getLineOrSkip() {
+        final String line = sc.nextLine();
+        if (line.equalsIgnoreCase("skip"))
+            throw new TokenException("skip");
+        return line;
+    }
 
     @Override
     public void initValue() {
@@ -39,7 +51,7 @@ public class TokenMatrix extends Token {
         while (!(rows > 0 && cols > 0)) {
             System.out.println(INPUT_FORMAT);
             try {
-                String[] dims = sc.nextLine().split(" ");
+                String[] dims = getLineOrSkip().split(" ");
                 rows = Integer.parseInt(dims[0]);
                 cols = Integer.parseInt(dims[1]);
             } catch (Exception ex) {
@@ -52,7 +64,7 @@ public class TokenMatrix extends Token {
         while (flag) {
             try {
                 for (int i = 0; i < rows; i++) {
-                    final String[] cols_values = sc.nextLine().split(" ");
+                    final String[] cols_values = getLineOrSkip().split(" ");
                     for (int j = 0; j < cols; j++)
                         matrix[i][j] = new TokenComplex(cols_values[j]);
                 }
@@ -65,44 +77,95 @@ public class TokenMatrix extends Token {
     }
 
     public void transpose() {
+        TokenComplex[][] t_matrix = new TokenComplex[cols][rows];
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                t_matrix[j][i] = matrix[i][j];
+        // Swap dimensions
+        final int t_rows = rows;
+        rows = cols;
+        cols = t_rows;
 
+        matrix = t_matrix;
     }
 
-    public void det() {
+    public TokenComplex det() {
+        if (rows != cols)
+            throw new TokenException("Невозможно вычислить детерминат — матрица не квадратная");
+        if (rows == 1)
+            return matrix[0][0];
+        for (int i = 0; i < rows; i++) {
 
+        }
     }
 
     @Override
     public String getStringValue() {
         StringBuilder value = new StringBuilder();
         for (int i = 0; i < rows; i++) {
+            value.append('|');
             for (int j = 0; j < cols; j++)
-                value.append(matrix[i][j].getStringValue()).append("\t");
-            value.append("\n");
+                value.append(matrix[i][j].getStringValue()).append('\t');
+            value.setCharAt(value.length() - 1, '|');
+            value.append('\n');
         }
 
         return value.toString();
     }
 
     @Override
-    public void add(final Token arg2) {
-        if (arg2.getState() != state)
-            throw new TokenException(String.format("Операция %s + %s не поддерживается", state, arg2.getState()));
+    public void add(final Token token) {
+        if (token.getState() != state)
+            throw new TokenException(String.format("Операция %s + %s не поддерживается", state, token.getState()));
+        final TokenMatrix arg = (TokenMatrix) token;
+        if (rows != arg.rows || cols != arg.cols)
+            throw new TokenException("Невозможно сложить матрицы разных размерностей");
+
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                matrix[i][j].add(arg.matrix[i][j]);
     }
 
     @Override
-    public void sub(final Token arg2) {
-        if (arg2.getState() != state)
-            throw new TokenException(String.format("Операция %s - %s не поддерживается", state, arg2.getState()));
+    public void sub(final Token token) {
+        if (token.getState() != state)
+            throw new TokenException(String.format("Операция %s - %s не поддерживается", state, token.getState()));
+        final TokenMatrix arg = (TokenMatrix) token;
+        if (rows != arg.rows || cols != arg.cols)
+            throw new TokenException("Невозможно вычесть матрицы разных размерностей");
+
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                matrix[i][j].sub(arg.matrix[i][j]);
     }
 
     @Override
-    public void multi(final Token arg2) {
+    public void multi(final Token token) {
+        if (token.getState() == State.KF) {
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    matrix[i][j].multi(token);
+        } else if (token.getState() == State.VAR) {
+            final TokenMatrix arg = (TokenMatrix) token;
+            if (cols != arg.rows)
+                throw new TokenException("Невозможно перемножить матрицы разных размерностей");
+            TokenComplex[][] t_matrix = new TokenComplex[rows][arg.cols];
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < arg.cols; j++) {
+                    TokenComplex complex = new TokenComplex();
+                    for (int k = 0; k < cols; k++)
+                        complex.add(matrix[i][k].getMulti(arg.matrix[k][j]));
+                    t_matrix[i][j] = complex;
+                }
+            }
 
+            matrix = t_matrix.clone();
+        } else
+            throw new TokenException(String.format("Операция %s * %s не поддерживается", state, token.getState()));
     }
 
     @Override
-    public void div(final Token arg2) throws CloneNotSupportedException {
+    public void div(final Token token) {
 
     }
 }
