@@ -9,7 +9,7 @@ public class TokenMatrix extends Token {
     private final String INPUT_DIM = "\nВведите размерность матрицы '%s':\n";
     private final String INPUT_FORMAT = "Положительные числа <кол-во строк> <кол-во столбцов> через пробел:";
     private final String BAD_FORMAT = "Неправильный формат.";
-    private final String INPUT_VALUES = "\nВведите матрицу '%s' БЕЗ ПРОБЕЛОВ в комплексных числах:\n";
+    private final String INPUT_VALUES = "Введите матрицу '%s' БЕЗ ПРОБЕЛОВ в комплексных числах:\n";
     private final String BAD_VALUES = "Вы превысили кол-во столбцов или ввели некорректное число. Вводите заново:";
 
     static private Map<String, TokenComplex[][]> matrixValues = new HashMap<>();
@@ -25,6 +25,8 @@ public class TokenMatrix extends Token {
     }
 
     private TokenComplex[][] matrix;
+    private int rows;
+    private int cols;
 
     @Override
     public void initValue() {
@@ -34,12 +36,10 @@ public class TokenMatrix extends Token {
         }
 
         System.out.printf(INPUT_DIM, name);
-        String[] dims = sc.nextLine().split(" ");
-        int rows = 0;
-        int cols = 0;
         while (!(rows > 0 && cols > 0)) {
             System.out.println(INPUT_FORMAT);
             try {
+                String[] dims = sc.nextLine().split(" ");
                 rows = Integer.parseInt(dims[0]);
                 cols = Integer.parseInt(dims[1]);
             } catch (Exception ex) {
@@ -49,7 +49,7 @@ public class TokenMatrix extends Token {
         matrix = new TokenComplex[rows][cols];
         System.out.printf(INPUT_VALUES, name);
         boolean flag = true;
-        while(flag) {
+        while (flag) {
             try {
                 for (int i = 0; i < rows; i++) {
                     final String[] cols_values = sc.nextLine().split(" ");
@@ -73,14 +73,26 @@ public class TokenMatrix extends Token {
     }
 
     @Override
+    public String getStringValue() {
+        StringBuilder value = new StringBuilder();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++)
+                value.append(matrix[i][j].getStringValue()).append("\t");
+            value.append("\n");
+        }
+
+        return value.toString();
+    }
+
+    @Override
     public void add(final Token arg2) {
-        if(arg2.getState() != state)
+        if (arg2.getState() != state)
             throw new TokenException(String.format("Операция %s + %s не поддерживается", state, arg2.getState()));
     }
 
     @Override
     public void sub(final Token arg2) {
-        if(arg2.getState() != state)
+        if (arg2.getState() != state)
             throw new TokenException(String.format("Операция %s - %s не поддерживается", state, arg2.getState()));
     }
 
