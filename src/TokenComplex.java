@@ -28,6 +28,12 @@ public class TokenComplex extends Token {
         imaginary = complex.imaginary;
     }
 
+    public TokenComplex(final TokenComplex tokenComplex) {
+        super(tokenComplex);
+        real = tokenComplex.real;
+        imaginary = tokenComplex.imaginary;
+    }
+
     private double real;
     private double imaginary;
 
@@ -35,8 +41,9 @@ public class TokenComplex extends Token {
     public String getStringValue() {
         String value = "";
         if (real != 0)
-            value += real + " ";
+            value += real;
         if (imaginary != 0) {
+            if(real != 0) value += " ";
             if (imaginary > 0 && !value.isEmpty()) value += "+ ";
             else if (imaginary < 0 && !value.isEmpty()) value += "- ";
             else if (imaginary < 0 && value.isEmpty()) value += "-";
@@ -89,13 +96,13 @@ public class TokenComplex extends Token {
     }
 
     @Override
-    public void div(final Token token) throws CloneNotSupportedException {
+    public void div(final Token token) {
         if (token.getState() != state)
             throw new TokenException(String.format("Операция %s / %s не поддерживается", state, token.getState()));
-        TokenComplex t_conj = (TokenComplex) ((TokenComplex) token).clone();
+        TokenComplex t_conj = new TokenComplex((TokenComplex) token);
         t_conj.imaginary *= -1;
         multi(t_conj);
-        TokenComplex denom = (TokenComplex) this.clone();
+        TokenComplex denom = new TokenComplex(this);
         denom.multi(t_conj);
         real /= denom.real;
         imaginary /= denom.real;

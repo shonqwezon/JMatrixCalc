@@ -25,6 +25,12 @@ public class Token {
         this(state, name, 0);
     }
 
+    public Token(final Token token) {
+        this.state = token.state;
+        this.name = token.name;
+        this.priority = token.priority;
+    }
+
     public int getPriority() {
         return priority;
     }
@@ -61,7 +67,7 @@ public class Token {
         throw new MethodNotSupportedException("multi()");
     }
 
-    public void div(final Token arg2) throws CloneNotSupportedException {
+    public void div(final Token arg2) {
         throw new MethodNotSupportedException("div()");
     }
 }
