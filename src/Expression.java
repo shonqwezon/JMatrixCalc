@@ -1,9 +1,7 @@
 import exceptions.ExpressionException;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Stack;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Class for calculating expression of tokens
@@ -15,8 +13,8 @@ public class Expression {
      * @param tokens Array of tokens
      */
     public void loadTokens(ArrayList<Token> tokens) throws Exception {
-        // Getting matrix values for VAR
         for (Token token : tokens) {
+            // Init only VARs and KFs
             if(token.getState() != Token.State.VAR && token.getState() != Token.State.KF)
                 continue;
             token.initValue();
@@ -29,7 +27,7 @@ public class Expression {
      * @return Result
      * @throws Exception Error during calculating
      */
-    public String calc() throws Exception {
+    public Token calc() throws Exception {
         Stack<Token> opersStack = new Stack<>();
         Stack<Token> argsStack = new Stack<>();
 
@@ -89,8 +87,7 @@ public class Expression {
         }
 
         if (argsStack.size() != 1) throw new ExpressionException("Некорректное выражение");
-        Token token = argsStack.peek();
-        return token.getStringValue();
+        return argsStack.peek();
     }
 
 
