@@ -1,3 +1,5 @@
+import exceptions.MethodNotSupportedException;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -24,9 +26,11 @@ public class Main {
                     System.out.printf("State: %s\t\t\tName: %s\t\tPriority: %d\n", token.getState(), token.getName(), token.getPriority());
                 }
                 expression.loadTokens(tokens);
-                System.out.println(RESULT + expression.calc());
+                System.out.println(RESULT + expression.calc().getStringValue());
+            } catch (MethodNotSupportedException ex) {
+                System.out.println("Ошибка: Токен не поддерживает метод " + ex.getMessage());
             } catch (Exception ex) {
-                System.out.println("Ошибка: " + ex.getMessage());
+                System.out.println("Непредвиденная ошибка: " + ex.getMessage());
             }
             finally {
                 TokenMatrix.clearValues();
