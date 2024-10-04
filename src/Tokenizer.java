@@ -59,14 +59,18 @@ public class Tokenizer {
         for (int i = 0; i < input.length(); i++) {
             char s = input.charAt(i);
             Token.State currentState = getCharState(s, i + 1);
+            if(currentState == Token.State.NONE) {
+                lastState = currentState;
+                continue;
+            }
             switch (lastState) {
                 case NONE -> {
-                    // Skip NULL symbols, except initial state
-                    if (currentState == Token.State.NONE) break;
                     // Add extra tokens for handling unary '-'
-                    if (s == '-' && tokens.isEmpty()) {
+                    if (s == '-' && (tokens.isEmpty() || tokens.getLast().getState() == Token.State.BRACKET)) {
                         tokens.add(createToken(Token.State.KF, "-1"));
                         tokens.add(createToken(Token.State.OPERATOR, '*'));
+                    } else if (currentState == Token.State.OPERATOR && !tokens.isEmpty() && tokens.getLast().getState() == Token.State.BRACKET) {
+                        throw new TokenException(String.format("Ожидался операнд (%d)", i));
                     } else
                         tokens.add(createToken(currentState, s));
                 }
@@ -102,6 +106,8 @@ public class Tokenizer {
                     if (s == '-') {
                         tokens.add(createToken(Token.State.KF, "-1"));
                         tokens.add(createToken(Token.State.OPERATOR, '*'));
+                    } else if (currentState == Token.State.OPERATOR) {
+                        throw new TokenException(String.format("Ожидался операнд (%d)", i));
                     } else
                         tokens.add(createToken(currentState, s));
                 }

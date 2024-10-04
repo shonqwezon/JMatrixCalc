@@ -48,11 +48,7 @@ public class Expression {
                     } else if (token.getName().equals("("))
                         opersStack.push(token);
                     else {
-                        int j = i - 1;
-                        while (j >= 0 && tokens.get(j).getState() == Token.State.NONE)
-                            j--;
-
-                        if (j > 0 && tokens.get(j).getState() != Token.State.OPERATOR) {
+                        if (i > 0 && tokens.get(i - 1).getState() != Token.State.OPERATOR) {
                             Token oper = opersStack.pop();
                             while (!oper.getName().equals("|")) {
                                 Token token2 = argsStack.pop();

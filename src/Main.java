@@ -27,8 +27,7 @@ public class Main {
                 ArrayList<Token> tokens = Tokenizer.run(input);
                 // Printing tokens
 //                for (Token token : tokens)
-//                    if(token.getState() != Token.State.NONE)
-//                        System.out.printf("State: %s\t\t\tName: %s\t\tPriority: %d\n", token.getState(), token.getName(), token.getPriority());
+//                    System.out.printf("State: %s\t\t\tName: %s\t\tPriority: %d\n", token.getState(), token.getName(), token.getPriority());
 
                 expression.loadTokens(tokens);
                 System.out.println(RESULT + expression.calc().getStringValue());
