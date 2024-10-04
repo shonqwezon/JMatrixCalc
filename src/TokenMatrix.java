@@ -119,9 +119,9 @@ public class TokenMatrix extends Token {
         final int size = matrix.length;
         TokenComplex[][] minorMatrix = new TokenComplex[size - 1][size - 1];
         for (int j = 0, mj = 0; j < size; j++) {
-            if(j == col) continue;
+            if (j == col) continue;
             for (int i = 0, mi = 0; i < size; i++) {
-                if(i == row) continue;
+                if (i == row) continue;
                 minorMatrix[mi++][mj] = matrix[i][j].clone();
             }
             mj++;
@@ -216,13 +216,13 @@ public class TokenMatrix extends Token {
         } catch (TokenException ex) {
             throw new TokenException("Невозможно делить неквадратные матрицы");
         }
-        if(det.isNull())
+        if (det.isNull())
             throw new TokenException("Невозможно делить вырожденые матрицы");
 
         TokenMatrix reverseMatrix = tokenMatrix.clone();
         for (int i = 0; i < reverseMatrix.rows; i++) {
             for (int j = 0; j < reverseMatrix.cols; j++) {
-                TokenComplex sign = new TokenComplex(Math.pow(-1, i+j), 0);
+                TokenComplex sign = new TokenComplex(Math.pow(-1, i + j), 0);
                 TokenComplex addition = getDeterminant(minor(tokenMatrix.matrix, i, j));
                 addition.multi(sign);
                 addition.div(det);
