@@ -3,6 +3,7 @@ import exceptions.MethodNotSupportedException;
 import exceptions.TokenException;
 
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.Scanner;
 
 public class Main {
@@ -24,17 +25,19 @@ public class Main {
             try {
                 // String tokenization
                 ArrayList<Token> tokens = Tokenizer.run(input);
-                for (Token token : tokens) {
-                    System.out.printf("State: %s\t\t\tName: %s\t\tPriority: %d\n", token.getState(), token.getName(), token.getPriority());
-                }
+                // Printing tokens
+//                for (Token token : tokens)
+//                    System.out.printf("State: %s\t\t\tName: %s\t\tPriority: %d\n", token.getState(), token.getName(), token.getPriority());
+
                 expression.loadTokens(tokens);
                 System.out.println(RESULT + expression.calc().getStringValue());
+
             } catch (MethodNotSupportedException ex) {
                 System.out.println("Ошибка: Токен не поддерживает метод " + ex.getMessage());
             } catch (TokenException ex) {
                 if (!ex.getMessage().equals("skip"))
                     System.out.println("Ошибка токена: " + ex.getMessage());
-            } catch (ExpressionException ex) {
+            } catch (ExpressionException | EmptyStackException ex) {
                 System.out.println("Ошибка в процессе вычисления: " + ex.getMessage());
             } catch (Exception ex) {
                 System.out.println("Непредвиденная ошибка: " + ex.getMessage());

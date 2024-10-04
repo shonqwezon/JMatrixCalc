@@ -59,6 +59,8 @@ public class TokenMatrix extends Token {
                 String[] dims = getLineOrSkip().split(" ");
                 rows = Integer.parseInt(dims[0]);
                 cols = Integer.parseInt(dims[1]);
+            } catch (TokenException ex) {
+                throw ex;
             } catch (Exception ex) {
                 System.out.println(BAD_FORMAT);
             }
@@ -74,6 +76,8 @@ public class TokenMatrix extends Token {
                         matrix[i][j] = new TokenComplex(cols_values[j]);
                 }
                 flag = false;
+            } catch (TokenException ex) {
+                throw ex;
             } catch (Exception ex) {
                 System.out.println(BAD_VALUES);
             }
@@ -209,7 +213,7 @@ public class TokenMatrix extends Token {
         multi(reverseMatrix);
     }
 
-    private static TokenMatrix getReverse(TokenMatrix tokenMatrix) {
+    private static TokenMatrix getReverse(final TokenMatrix tokenMatrix) {
         TokenComplex det;
         try {
             det = tokenMatrix.det();

@@ -47,6 +47,10 @@ public class Token implements Cloneable {
         name += c;
     }
 
+
+    /** Transforming object-result to human-readable format
+     * @return String value of token
+     */
     public String getStringValue() {
         throw new MethodNotSupportedException("getStringValue()");
     }
