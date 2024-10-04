@@ -92,11 +92,36 @@ public class TokenMatrix extends Token {
     public TokenComplex det() {
         if (rows != cols)
             throw new TokenException("Невозможно вычислить детерминат — матрица не квадратная");
-        if (rows == 1)
-            return matrix[0][0];
-        for (int i = 0; i < rows; i++) {
+        return getDeterminant(matrix);
+    }
 
+    private TokenComplex getDeterminant(TokenComplex[][] matrix) {
+        final int size = matrix.length;
+        if (size == 1)
+            return matrix[0][0];
+        TokenComplex complex = new TokenComplex();
+        for (int col = 0; col < size; col++) {
+            TokenComplex sign = new TokenComplex(Math.pow(-1, col), 0);
+            TokenComplex addition = matrix[0][col].getMulti(sign);
+            addition.multi(getDeterminant(minor(matrix, 0, col)));
+            complex.add(addition);
         }
+
+        return complex;
+    }
+
+    private TokenComplex[][] minor(TokenComplex[][] matrix, int row, int col) {
+        final int size = matrix.length;
+        TokenComplex[][] minorMatrix = new TokenComplex[size - 1][size - 1];
+        for (int j = 0, mj = 0; j < size; j++) {
+            if(j == col) continue;
+            for (int i = 0, mi = 0; i < size; i++) {
+                if(i == row) continue;
+                minorMatrix[mi++][mj] = matrix[i][j].clone();
+            }
+            mj++;
+        }
+        return minorMatrix;
     }
 
     @Override

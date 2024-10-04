@@ -28,8 +28,14 @@ public class TokenComplex extends Token {
         imaginary = complex.imaginary;
     }
 
-    public TokenComplex() {
+    public TokenComplex(double real, double imaginary) {
         this(State.KF, "0");
+        this.real = real;
+        this.imaginary = imaginary;
+    }
+
+    public TokenComplex() {
+        this(0, 0);
     }
 
     @Override
