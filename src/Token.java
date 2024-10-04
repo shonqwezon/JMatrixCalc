@@ -1,8 +1,5 @@
 import exceptions.MethodNotSupportedException;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Class for working with tokens
  */
@@ -54,7 +51,7 @@ public class Token implements Cloneable {
         throw new MethodNotSupportedException("getStringValue()");
     }
 
-    public void initValue() throws Exception {
+    public void initValue() {
         throw new MethodNotSupportedException("initValue()");
     }
 

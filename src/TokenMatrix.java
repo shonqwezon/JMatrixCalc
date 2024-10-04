@@ -1,4 +1,3 @@
-import exceptions.MethodNotSupportedException;
 import exceptions.TokenException;
 
 import java.util.HashMap;

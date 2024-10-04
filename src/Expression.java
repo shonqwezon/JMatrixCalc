@@ -25,9 +25,8 @@ public class Expression {
 
     /** Shunting Yard algorithm
      * @return Result
-     * @throws Exception Error during calculating
      */
-    public Token calc() throws Exception {
+    public Token calc() {
         Stack<Token> opersStack = new Stack<>();
         Stack<Token> argsStack = new Stack<>();
 
