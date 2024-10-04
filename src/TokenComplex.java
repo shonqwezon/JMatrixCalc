@@ -50,14 +50,14 @@ public class TokenComplex extends Token {
     public String getStringValue() {
         String value = "";
         if (real != 0)
-            value += real;
+            value += (real % 1 == 0) ? String.format("%.0f", real) : real;
         if (imaginary != 0) {
             if(real != 0) value += " ";
             if (imaginary > 0 && !value.isEmpty()) value += "+ ";
             else if (imaginary < 0 && !value.isEmpty()) value += "- ";
             else if (imaginary < 0 && value.isEmpty()) value += "-";
             if (Math.abs(imaginary) == 1) value += "i";
-            else value += Math.abs(imaginary) + "i";
+            else value += ((imaginary % 1 == 0) ? String.format("%.0f", imaginary) : Math.abs(imaginary)) + "i";
         }
         return value.isEmpty() ? "0" : value;
     }
