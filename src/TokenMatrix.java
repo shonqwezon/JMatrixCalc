@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class TokenMatrix extends Token {
-    private final String INPUT_DIM = "\nВведите размерность матрицы '%s':\n";
-    private final String INPUT_FORMAT = "Положительные числа <кол-во строк> <кол-во столбцов> через пробел:";
-    private final String BAD_FORMAT = "Неправильный формат.";
-    private final String INPUT_VALUES = "Введите матрицу '%s' БЕЗ ПРОБЕЛОВ в комплексных числах:\n";
-    private final String BAD_VALUES = "Вы превысили кол-во столбцов или ввели некорректное число. Вводите заново:";
+    private static final String INPUT_DIM = "\nВведите размерность матрицы '%s':\n";
+    private static final String INPUT_FORMAT = "Положительные числа <кол-во строк> <кол-во столбцов> через пробел:";
+    private static final String BAD_FORMAT = "Неправильный формат.";
+    private static final String INPUT_VALUES = "Введите матрицу '%s' БЕЗ ПРОБЕЛОВ в комплексных числах:\n";
+    private static final String BAD_VALUES = "Вы превысили кол-во столбцов или ввели некорректное число. Вводите заново:";
 
     static private Map<String, TokenComplex[][]> matrixValues = new HashMap<>();
 
@@ -49,6 +49,8 @@ public class TokenMatrix extends Token {
     public void initValue() {
         if (matrixValues.containsKey(name)) {
             matrix = matrixValues.get(name).clone();
+            rows = matrix.length;
+            cols = matrix[0].length;
             return;
         }
 
@@ -136,12 +138,19 @@ public class TokenMatrix extends Token {
     @Override
     public String getStringValue() {
         StringBuilder value = new StringBuilder();
+        int[] spaces = new int[cols];
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++) {
+                if(j + 1 == cols)
+                    spaces[j] = Math.max(spaces[j], matrix[i][j].getStringValue().length());
+                else
+                    spaces[j] = Math.max(spaces[j], matrix[i][j].getStringValue().length() + 2);
+            }
         for (int i = 0; i < rows; i++) {
             value.append('|');
             for (int j = 0; j < cols; j++)
-                value.append(matrix[i][j].getStringValue()).append('\t');
-            value.setCharAt(value.length() - 1, '|');
-            value.append('\n');
+                value.append(String.format("%-" + spaces[j] + "s", matrix[i][j].getStringValue()));
+            value.append("|\n");
         }
 
         return value.toString();
@@ -203,7 +212,7 @@ public class TokenMatrix extends Token {
         if (token.getState() == State.KF) {
             TokenComplex uno = new TokenComplex(1, 0);
             uno.div(token);
-            token.multi(uno);
+            multi(uno);
             return;
         }
         if (token.getState() != state)

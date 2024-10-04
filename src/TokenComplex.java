@@ -49,15 +49,16 @@ public class TokenComplex extends Token {
     @Override
     public String getStringValue() {
         String value = "";
-        if (real != 0)
-            value += (real % 1 == 0) ? String.format("%.0f", real) : real;
-        if (imaginary != 0) {
-            if(real != 0) value += " ";
-            if (imaginary > 0 && !value.isEmpty()) value += "+ ";
-            else if (imaginary < 0 && !value.isEmpty()) value += "- ";
-            else if (imaginary < 0 && value.isEmpty()) value += "-";
-            if (Math.abs(imaginary) == 1) value += "i";
-            else value += ((imaginary % 1 == 0) ? String.format("%.0f", imaginary) : Math.abs(imaginary)) + "i";
+        final double t_real = Math.round(real * 100.0) / 100.0;
+        final double t_imaginary = Math.round(imaginary * 100.0) / 100.0;
+        if (t_real != 0)
+            value += (t_real % 1 == 0) ? String.format("%.0f", t_real) : String.format("%.2f", t_real);
+        if (t_imaginary != 0) {
+            if (t_imaginary > 0 && !value.isEmpty()) value += "+";
+            else if (t_imaginary < 0) value += "-";
+            if (Math.abs(t_imaginary) == 1) value += "i";
+            else
+                value += ((t_imaginary % 1 == 0) ? String.format("%.0f", Math.abs(t_imaginary)) : String.format("%.2f", Math.abs(t_imaginary))) + "i";
         }
         return value.isEmpty() ? "0" : value;
     }

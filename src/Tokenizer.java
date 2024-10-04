@@ -83,7 +83,7 @@ public class Tokenizer {
                 case KF -> {
                     if (currentState == Token.State.KF || s == 'i')
                         updateLastTokenName(s);
-                    else if (currentState == Token.State.VAR || tokens.getLast().getName().charAt(0) == 'i')
+                    else if (currentState == Token.State.VAR)
                         updateLastTokenName(s);
                     else
                         tokens.add(createToken(currentState, s));

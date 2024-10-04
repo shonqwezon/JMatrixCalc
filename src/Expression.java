@@ -15,7 +15,7 @@ public class Expression {
     public void loadTokens(ArrayList<Token> tokens) throws Exception {
         for (Token token : tokens) {
             // Init only VARs and KFs
-            if(token.getState() != Token.State.VAR && token.getState() != Token.State.KF)
+            if (token.getState() != Token.State.VAR && token.getState() != Token.State.KF)
                 continue;
             token.initValue();
         }
@@ -23,7 +23,9 @@ public class Expression {
     }
 
 
-    /** Shunting Yard algorithm
+    /**
+     * Shunting Yard algorithm
+     *
      * @return Result
      */
     public Token calc() {
@@ -46,7 +48,11 @@ public class Expression {
                     } else if (token.getName().equals("("))
                         opersStack.push(token);
                     else {
-                        if (i > 0 && tokens.get(i - 1).getState() != Token.State.OPERATOR) {
+                        int j = i - 1;
+                        while (j >= 0 && tokens.get(j).getState() == Token.State.NONE)
+                            j--;
+
+                        if (j > 0 && tokens.get(j).getState() != Token.State.OPERATOR) {
                             Token oper = opersStack.pop();
                             while (!oper.getName().equals("|")) {
                                 Token token2 = argsStack.pop();
@@ -56,8 +62,7 @@ public class Expression {
                             }
                             Token token1 = argsStack.pop();
                             argsStack.push(applyOperation(token, token1, null));
-                        }
-                        else opersStack.push(token);
+                        } else opersStack.push(token);
                     }
                 }
                 case Token.State.OPERATOR -> {
@@ -82,15 +87,15 @@ public class Expression {
             Token token1 = argsStack.pop();
             argsStack.push(applyOperation(opersStack.pop(), token1, token2));
         }
-
+        if (argsStack.size() != 1) throw new ExpressionException("Некорректное выражение");
         return argsStack.peek();
     }
 
 
     /**
      * @param operation Operation
-     * @param token1 First argument
-     * @param token2 Second argument
+     * @param token1    First argument
+     * @param token2    Second argument
      * @return Updated token
      */
     private Token applyOperation(Token operation, Token token1, Token token2) {
@@ -98,7 +103,7 @@ public class Expression {
             case "+" -> token1.add(token2);
             case "-" -> token1.sub(token2);
             case "*" -> {
-                if(token1.getState() != Token.State.VAR && token2.state == Token.State.VAR) {
+                if (token1.getState() != Token.State.VAR && token2.state == Token.State.VAR) {
                     Token temp = token1;
                     token1 = token2;
                     token2 = temp;
