@@ -6,7 +6,16 @@ import java.util.Map;
 /**
  * Class for working with tokens
  */
-public class Token {
+public class Token implements Cloneable {
+    @Override
+    public Token clone() {
+        try {
+            return (Token) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public enum State {
         NONE, VAR, KF, OPERATOR, BRACKET
     }
@@ -23,12 +32,6 @@ public class Token {
 
     public Token(State state, String name) {
         this(state, name, 0);
-    }
-
-    public Token(final Token token) {
-        this.state = token.state;
-        this.name = token.name;
-        this.priority = token.priority;
     }
 
     public int getPriority() {

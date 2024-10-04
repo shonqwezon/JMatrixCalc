@@ -28,10 +28,13 @@ public class TokenComplex extends Token {
         imaginary = complex.imaginary;
     }
 
-    public TokenComplex(final TokenComplex tokenComplex) {
-        super(tokenComplex);
-        real = tokenComplex.real;
-        imaginary = tokenComplex.imaginary;
+    public TokenComplex() {
+        this(State.KF, "0");
+    }
+
+    @Override
+    public TokenComplex clone() {
+        return (TokenComplex) super.clone();
     }
 
     private double real;
@@ -95,14 +98,20 @@ public class TokenComplex extends Token {
         imaginary = t_real * arg.imaginary + arg.real * t_imaginary;
     }
 
+    public TokenComplex getMulti(final Token token) {
+        TokenComplex tokenComplex = this.clone();
+        tokenComplex.multi(token);
+        return tokenComplex;
+    }
+
     @Override
     public void div(final Token token) {
         if (token.getState() != state)
             throw new TokenException(String.format("Операция %s / %s не поддерживается", state, token.getState()));
-        TokenComplex t_conj = new TokenComplex((TokenComplex) token);
+        TokenComplex t_conj = ((TokenComplex) token).clone();
         t_conj.imaginary *= -1;
         multi(t_conj);
-        TokenComplex denom = new TokenComplex(this);
+        TokenComplex denom = this.clone();
         denom.multi(t_conj);
         real /= denom.real;
         imaginary /= denom.real;
