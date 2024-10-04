@@ -1,4 +1,6 @@
+import exceptions.ExpressionException;
 import exceptions.MethodNotSupportedException;
+import exceptions.TokenException;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -6,7 +8,7 @@ import java.util.Scanner;
 public class Main {
     static final String HELLO = "Кальулятор матриц!\nДоступные операции: ( ), +, -, *, /, | |, ^T\n";
     static final String INPUT_EXP = "Введите выражение:";
-    static final String RESULT = "Результат: ";
+    static final String RESULT = "Результат:\n";
 
     public static void main(String[] args) {
         System.out.println(HELLO);
@@ -17,7 +19,7 @@ public class Main {
         while (true) {
             System.out.println(INPUT_EXP);
             input = sc.nextLine();
-            if(input.equalsIgnoreCase("exit"))
+            if (input.equalsIgnoreCase("exit"))
                 break;
             try {
                 // String tokenization
@@ -29,10 +31,14 @@ public class Main {
                 System.out.println(RESULT + expression.calc().getStringValue());
             } catch (MethodNotSupportedException ex) {
                 System.out.println("Ошибка: Токен не поддерживает метод " + ex.getMessage());
+            } catch (TokenException ex) {
+                if (!ex.getMessage().equals("skip"))
+                    System.out.println("Ошибка токена: " + ex.getMessage());
+            } catch (ExpressionException ex) {
+                System.out.println("Ошибка в процессе вычисления: " + ex.getMessage());
             } catch (Exception ex) {
                 System.out.println("Непредвиденная ошибка: " + ex.getMessage());
-            }
-            finally {
+            } finally {
                 TokenMatrix.clearValues();
             }
         }

@@ -97,7 +97,7 @@ public class Expression {
      * @param token2 Second argument
      * @return Updated token
      */
-    private Token applyOperation(Token operation, Token token1, Token token2) throws CloneNotSupportedException {
+    private Token applyOperation(Token operation, Token token1, Token token2) {
         switch (operation.getName()) {
             case "+" -> token1.add(token2);
             case "-" -> token1.sub(token2);
@@ -111,8 +111,8 @@ public class Expression {
             }
             case "/" -> token1.div(token2);
             case "^T" -> ((TokenMatrix) token1).transpose();
-            case "|" -> ((TokenMatrix) token1).det();
-            default -> throw new IllegalStateException("Неизвестный оператор: " + operation.getName());
+            case "|" -> token1 = ((TokenMatrix) token1).det();
+            default -> throw new ExpressionException("Неизвестный оператор: " + operation.getName());
         }
 
         return token1;
