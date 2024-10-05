@@ -4,13 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class TokenMatrix extends Token {
-    private static final String INPUT_DIM = "\nВведите размерность матрицы '%s':\n";
-    private static final String INPUT_FORMAT = "Положительные числа <кол-во строк> <кол-во столбцов> через пробел:";
-    private static final String BAD_FORMAT = "Неправильный формат.";
-    private static final String INPUT_VALUES = "Введите матрицу '%s' БЕЗ ПРОБЕЛОВ в комплексных числах:\n";
-    private static final String BAD_VALUES = "Вы превысили кол-во столбцов или ввели некорректное число. Вводите заново:";
-
+public class TokenMatrix extends Token implements Messages, Commands {
     static private Map<String, TokenComplex[][]> matrixValues = new HashMap<>();
 
     static private final Scanner sc = new Scanner(System.in);
@@ -40,8 +34,8 @@ public class TokenMatrix extends Token {
 
     String getLineOrSkip() {
         final String line = sc.nextLine();
-        if (line.equalsIgnoreCase("skip"))
-            throw new TokenException("skip");
+        if (line.equalsIgnoreCase(SKIP))
+            throw new TokenException(SKIP);
         return line;
     }
 
@@ -102,11 +96,11 @@ public class TokenMatrix extends Token {
 
     public TokenComplex det() {
         if (rows != cols)
-            throw new TokenException("Невозможно вычислить детерминат — матрица не квадратная");
+            throw new TokenException(EX_DET);
         return getDeterminant(matrix);
     }
 
-    private static TokenComplex getDeterminant(final TokenComplex[][] matrix) {
+    private TokenComplex getDeterminant(final TokenComplex[][] matrix) {
         final int size = matrix.length;
         if (size == 1)
             return matrix[0][0].clone();
@@ -121,7 +115,7 @@ public class TokenMatrix extends Token {
         return complex;
     }
 
-    private static TokenComplex[][] minor(final TokenComplex[][] matrix, int row, int col) {
+    private TokenComplex[][] minor(final TokenComplex[][] matrix, int row, int col) {
         final int size = matrix.length;
         TokenComplex[][] minorMatrix = new TokenComplex[size - 1][size - 1];
         for (int j = 0, mj = 0; j < size; j++) {
@@ -159,10 +153,10 @@ public class TokenMatrix extends Token {
     @Override
     public void add(final Token token) {
         if (token.getState() != state)
-            throw new TokenException(String.format("Операция %s + %s не поддерживается", state, token.getState()));
+            throw new TokenException(String.format(EX_BAD_OPERATION, state, '-', token.getState()));
         final TokenMatrix arg = (TokenMatrix) token;
         if (rows != arg.rows || cols != arg.cols)
-            throw new TokenException("Невозможно сложить матрицы разных размерностей");
+            throw new TokenException(String.format(EX_BAD_DIMS, "сложить"));
 
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < cols; j++)
@@ -172,10 +166,10 @@ public class TokenMatrix extends Token {
     @Override
     public void sub(final Token token) {
         if (token.getState() != state)
-            throw new TokenException(String.format("Операция %s - %s не поддерживается", state, token.getState()));
+            throw new TokenException(String.format(EX_BAD_OPERATION, state, '-', token.getState()));
         final TokenMatrix arg = (TokenMatrix) token;
         if (rows != arg.rows || cols != arg.cols)
-            throw new TokenException("Невозможно вычесть матрицы разных размерностей");
+            throw new TokenException(String.format(EX_BAD_DIMS, "вычесть"));
 
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < cols; j++)
@@ -191,7 +185,7 @@ public class TokenMatrix extends Token {
         } else if (token.getState() == State.VAR) {
             final TokenMatrix arg = (TokenMatrix) token;
             if (cols != arg.rows)
-                throw new TokenException("Невозможно перемножить матрицы разных размерностей");
+                throw new TokenException(String.format(EX_BAD_DIMS, "перемножить"));
             TokenComplex[][] t_matrix = new TokenComplex[rows][arg.cols];
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < arg.cols; j++) {
@@ -204,7 +198,7 @@ public class TokenMatrix extends Token {
 
             matrix = t_matrix.clone();
         } else
-            throw new TokenException(String.format("Операция %s * %s не поддерживается", state, token.getState()));
+            throw new TokenException(String.format(EX_BAD_OPERATION, state, '*', token.getState()));
     }
 
     @Override
@@ -216,21 +210,21 @@ public class TokenMatrix extends Token {
             return;
         }
         if (token.getState() != state)
-            throw new TokenException(String.format("Операция %s / %s не поддерживается", state, token.getState()));
+            throw new TokenException(String.format(EX_BAD_OPERATION, state, '/', token.getState()));
 
         TokenMatrix reverseMatrix = getReverse((TokenMatrix) token);
         multi(reverseMatrix);
     }
 
-    private static TokenMatrix getReverse(final TokenMatrix tokenMatrix) {
+    private TokenMatrix getReverse(final TokenMatrix tokenMatrix) {
         TokenComplex det;
         try {
             det = tokenMatrix.det();
         } catch (TokenException ex) {
-            throw new TokenException("Невозможно делить неквадратные матрицы");
+            throw new TokenException(EX_DIV_SQUARE);
         }
         if (det.isNull())
-            throw new TokenException("Невозможно делить вырожденые матрицы");
+            throw new TokenException(EX_FIV_DET);
 
         TokenMatrix reverseMatrix = tokenMatrix.clone();
         for (int i = 0; i < reverseMatrix.rows; i++) {

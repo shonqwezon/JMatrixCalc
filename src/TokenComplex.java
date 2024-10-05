@@ -2,7 +2,7 @@ import exceptions.TokenException;
 
 import java.util.ArrayList;
 
-public class TokenComplex extends Token {
+public class TokenComplex extends Token implements Messages {
     public TokenComplex(State state, String name) {
         super(state, name);
 
@@ -16,7 +16,7 @@ public class TokenComplex extends Token {
         ArrayList<Token> tokens = Tokenizer.run(name);
         for (Token token : tokens) {
             if (token.getState() == State.VAR)
-                throw new TokenException("Некорректное число");
+                throw new TokenException(BAD_NUM);
         }
 
         Expression expression = new Expression();
@@ -72,7 +72,7 @@ public class TokenComplex extends Token {
             } else
                 real = Double.parseDouble(name);
         } catch (NumberFormatException ex) {
-            throw new TokenException("Неверный формат числа");
+            throw new TokenException(BAD_FORMAT_NUM);
         }
     }
 

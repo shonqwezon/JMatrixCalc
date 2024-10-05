@@ -6,7 +6,7 @@ import java.util.Stack;
 /**
  * Class for calculating expression of tokens
  */
-public class Expression {
+public class Expression implements Messages {
     private ArrayList<Token> tokens;
 
     /**
@@ -83,7 +83,7 @@ public class Expression {
             Token token1 = argsStack.pop();
             argsStack.push(applyOperation(opersStack.pop(), token1, token2));
         }
-        if (argsStack.size() != 1) throw new ExpressionException("Некорректное выражение");
+        if (argsStack.size() != 1) throw new ExpressionException(BAD_EXPRESSION);
         return argsStack.peek();
     }
 
@@ -109,7 +109,7 @@ public class Expression {
             case "/" -> token1.div(token2);
             case "^T" -> ((TokenMatrix) token1).transpose();
             case "|" -> token1 = ((TokenMatrix) token1).det();
-            default -> throw new ExpressionException("Неизвестный оператор: " + operation.getName());
+            default -> throw new ExpressionException(UNKNOWN_OPER + operation.getName());
         }
 
         return token1;
