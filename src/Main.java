@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Scanner;
 
-public class Main implements Messages, Commands {
+public class Main implements Messages {
     public static void main(String[] args) {
         System.out.println(HELLO);
+        Command.printAll();
         Scanner sc = new Scanner(System.in);
         String input;
         Expression expression = new Expression();
@@ -16,7 +17,7 @@ public class Main implements Messages, Commands {
         while (true) {
             System.out.println(INPUT_EXP);
             input = sc.nextLine();
-            if (input.equalsIgnoreCase(EXIT))
+            if (input.equalsIgnoreCase(Command.EXIT.toString()))
                 break;
             try {
                 // String tokenization
@@ -31,7 +32,7 @@ public class Main implements Messages, Commands {
             } catch (MethodNotSupportedException ex) {
                 System.out.println(EX_TOKEN_METHOD + ex.getMessage());
             } catch (TokenException ex) {
-                if (!ex.getMessage().equals(SKIP))
+                if (!ex.getMessage().equals(Command.SKIP.toString()))
                     System.out.println(EX_TOKEN + ex.getMessage());
             } catch (ExpressionException | EmptyStackException ex) {
                 System.out.println(EX_CALC + ex.getMessage());

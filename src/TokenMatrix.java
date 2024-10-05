@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class TokenMatrix extends Token implements Messages, Commands {
+public class TokenMatrix extends Token implements Messages {
     static private Map<String, TokenComplex[][]> matrixValues = new HashMap<>();
 
     static private final Scanner sc = new Scanner(System.in);
@@ -40,8 +40,8 @@ public class TokenMatrix extends Token implements Messages, Commands {
 
     String getLineOrSkip() {
         final String line = sc.nextLine();
-        if (line.equalsIgnoreCase(SKIP))
-            throw new TokenException(SKIP);
+        if (line.equalsIgnoreCase(Command.SKIP.toString()))
+            throw new TokenException(Command.SKIP.toString());
         return line;
     }
 
