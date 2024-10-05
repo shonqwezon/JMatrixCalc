@@ -66,7 +66,9 @@ public class Tokenizer implements Messages {
             switch (lastState) {
                 case NONE, BRACKET -> {
                     // Add extra tokens for handling unary '-'
-                    if (s == '-' && (tokens.isEmpty() || tokens.getLast().getName().equals("("))) {
+                    if (s == '-' && (tokens.isEmpty() || tokens.getLast().getName().equals("(") || tokens.getLast().getName().equals("|"))) {
+                        if(tokens.size() >= 2 && tokens.get(tokens.size() - 2).getState() != Token.State.OPERATOR)
+                            tokens.add(createToken(Token.State.OPERATOR, '+'));
                         tokens.add(createToken(Token.State.KF, "-1"));
                         tokens.add(createToken(Token.State.OPERATOR, '*'));
                     } else if (currentState == Token.State.OPERATOR && !tokens.isEmpty() && tokens.getLast().getName().equals("(")) {
