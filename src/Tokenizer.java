@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Tokenizer {
+public class Tokenizer implements Messages {
     /**
      * Map for storing operator's priority
      */
@@ -70,7 +70,7 @@ public class Tokenizer {
                         tokens.add(createToken(Token.State.KF, "-1"));
                         tokens.add(createToken(Token.State.OPERATOR, '*'));
                     } else if (currentState == Token.State.OPERATOR && !tokens.isEmpty() && tokens.getLast().getName().equals("(")) {
-                        throw new TokenException(String.format("Ожидался операнд (%d)", i));
+                        throw new TokenException(String.format(WAITED_OPERAND, i));
                     } else
                         tokens.add(createToken(currentState, s));
                 }
@@ -120,7 +120,7 @@ public class Tokenizer {
         else if (Character.isLetter(s)) return Token.State.VAR;
         else if (operators.containsKey(s)) return Token.State.OPERATOR;
         else if (s == '(' || s == ')' || s == '|') return Token.State.BRACKET;
-        else throw new TokenException(String.format("Неизвестный символ (%d)", index));
+        else throw new TokenException(String.format(UNKNOWN_CHAR, index));
     }
 }
 

@@ -79,7 +79,7 @@ public class TokenComplex extends Token implements Messages {
     @Override
     public void add(final Token token) {
         if (token.getState() != state)
-            throw new TokenException(String.format("Операция %s + %s не поддерживается", state, token.getState()));
+            throw new TokenException(String.format(EX_BAD_OPERATION, state, '+', token.getState()));
         final TokenComplex arg = (TokenComplex) token;
         real += arg.real;
         imaginary += arg.imaginary;
@@ -88,7 +88,7 @@ public class TokenComplex extends Token implements Messages {
     @Override
     public void sub(final Token token) {
         if (token.getState() != state)
-            throw new TokenException(String.format("Операция %s - %s не поддерживается", state, token.getState()));
+            throw new TokenException(String.format(EX_BAD_OPERATION, state, '-', token.getState()));
         final TokenComplex arg = (TokenComplex) token;
         real -= arg.real;
         imaginary -= arg.imaginary;
@@ -97,7 +97,7 @@ public class TokenComplex extends Token implements Messages {
     @Override
     public void multi(final Token token) {
         if (token.getState() != state)
-            throw new TokenException(String.format("Операция %s * %s не поддерживается", state, token.getState()));
+            throw new TokenException(String.format(EX_BAD_OPERATION, state, '*', token.getState()));
         final TokenComplex arg = (TokenComplex) token;
         double t_real = real;
         double t_imaginary = imaginary;
@@ -114,7 +114,7 @@ public class TokenComplex extends Token implements Messages {
     @Override
     public void div(final Token token) {
         if (token.getState() != state)
-            throw new TokenException(String.format("Операция %s / %s не поддерживается", state, token.getState()));
+            throw new TokenException(String.format(EX_BAD_OPERATION, state, '/', token.getState()));
         TokenComplex t_conj = ((TokenComplex) token).clone();
         if(t_conj.isNull())
             throw new TokenException(DIV_ZERO);

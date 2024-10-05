@@ -15,6 +15,10 @@ public interface Messages {
     String BAD_CAST_REVERSE = "Нельзя траспонировать число";
     String BAD_CAST_DET = "Нельзя найти детерминант у числа";
 
+    // Tokenizer
+    String UNKNOWN_CHAR = "Неизвестный символ (%d)";
+    String WAITED_OPERAND = "Ожидался операнд (%d)";
+
     // TokenMatrix
     String INPUT_DIM = "\nВведите размерность матрицы '%s':\n";
     String INPUT_FORMAT = "Положительные числа <кол-во строк> <кол-во столбцов> через пробел:";
