@@ -116,6 +116,8 @@ public class TokenComplex extends Token implements Messages {
         if (token.getState() != state)
             throw new TokenException(String.format("Операция %s / %s не поддерживается", state, token.getState()));
         TokenComplex t_conj = ((TokenComplex) token).clone();
+        if(t_conj.isNull())
+            throw new TokenException(DIV_ZERO);
         t_conj.imaginary *= -1;
         multi(t_conj);
         TokenComplex denom = (TokenComplex) token.clone();

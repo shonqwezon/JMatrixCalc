@@ -107,8 +107,16 @@ public class Expression implements Messages {
                 token1.multi(token2);
             }
             case "/" -> token1.div(token2);
-            case "^T" -> ((TokenMatrix) token1).transpose();
-            case "|" -> token1 = ((TokenMatrix) token1).det();
+            case "^T" -> {
+                if(token1.getState() != Token.State.VAR)
+                    throw new ExpressionException(BAD_CAST_REVERSE);
+                ((TokenMatrix) token1).transpose();
+            }
+            case "|" -> {
+                if(token1.getState() != Token.State.VAR)
+                    throw new ExpressionException(BAD_CAST_DET);
+                token1 = ((TokenMatrix) token1).det();
+            }
             default -> throw new ExpressionException(UNKNOWN_OPER + operation.getName());
         }
 

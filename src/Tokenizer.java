@@ -64,12 +64,12 @@ public class Tokenizer {
                 continue;
             }
             switch (lastState) {
-                case NONE -> {
+                case NONE, BRACKET -> {
                     // Add extra tokens for handling unary '-'
-                    if (s == '-' && (tokens.isEmpty() || tokens.getLast().getState() == Token.State.BRACKET)) {
+                    if (s == '-' && (tokens.isEmpty() || tokens.getLast().getName().equals("("))) {
                         tokens.add(createToken(Token.State.KF, "-1"));
                         tokens.add(createToken(Token.State.OPERATOR, '*'));
-                    } else if (currentState == Token.State.OPERATOR && !tokens.isEmpty() && tokens.getLast().getState() == Token.State.BRACKET) {
+                    } else if (currentState == Token.State.OPERATOR && !tokens.isEmpty() && tokens.getLast().getName().equals("(")) {
                         throw new TokenException(String.format("Ожидался операнд (%d)", i));
                     } else
                         tokens.add(createToken(currentState, s));
@@ -98,16 +98,6 @@ public class Tokenizer {
                     if (currentState == Token.State.VAR && s == 'T') {
                         updateLastTokenName(s);
                         currentState = Token.State.NONE;
-                    } else
-                        tokens.add(createToken(currentState, s));
-                }
-                case BRACKET -> {
-                    // Add extra tokens for handling unary '-'
-                    if (s == '-') {
-                        tokens.add(createToken(Token.State.KF, "-1"));
-                        tokens.add(createToken(Token.State.OPERATOR, '*'));
-                    } else if (currentState == Token.State.OPERATOR) {
-                        throw new TokenException(String.format("Ожидался операнд (%d)", i));
                     } else
                         tokens.add(createToken(currentState, s));
                 }

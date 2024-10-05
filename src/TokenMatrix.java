@@ -17,6 +17,12 @@ public class TokenMatrix extends Token implements Messages, Commands {
         super(state, name);
     }
 
+    private void setMatrix(TokenComplex[][] newMatrix) {
+        matrix = newMatrix;
+        rows = newMatrix.length;
+        cols = newMatrix[0].length;
+    }
+
     @Override
     public TokenMatrix clone() {
         TokenMatrix tokenMatrix = (TokenMatrix) super.clone();
@@ -42,9 +48,7 @@ public class TokenMatrix extends Token implements Messages, Commands {
     @Override
     public void initValue() {
         if (matrixValues.containsKey(name)) {
-            matrix = matrixValues.get(name).clone();
-            rows = matrix.length;
-            cols = matrix[0].length;
+            setMatrix(matrixValues.get(name).clone());
             return;
         }
 
@@ -86,12 +90,8 @@ public class TokenMatrix extends Token implements Messages, Commands {
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < cols; j++)
                 t_matrix[j][i] = matrix[i][j];
-        // Swap dimensions
-        final int t_rows = rows;
-        rows = cols;
-        cols = t_rows;
 
-        matrix = t_matrix;
+        setMatrix(t_matrix);
     }
 
     public TokenComplex det() {
@@ -196,7 +196,7 @@ public class TokenMatrix extends Token implements Messages, Commands {
                 }
             }
 
-            matrix = t_matrix.clone();
+            setMatrix(t_matrix);
         } else
             throw new TokenException(String.format(EX_BAD_OPERATION, state, '*', token.getState()));
     }
